@@ -64,6 +64,20 @@ class mailman
 		$url = $protokoll."://".$domain."/mailman/admin/".$list."/members/remove?send_unsub_ack_to_this_batch=0&send_unsub_notifications_to_list_owner=0&unsubscribees_upload=".$mail."&adminpw=".$password;
 		file_get_contents($url);
 	}
-	//
+	
+	// Weitere funktionen
+	public function AdvertiseList($status = 1, $list, $password, $domain = NULL, $protokoll = NULL)
+	{
+		if($domain == NULL )
+		{
+			$domain = $this->domain;
+		}
+		if($protokoll == NULL )
+		{
+			$protokoll = $this->protokoll;
+		}
+		$url = $protokoll."://".$domain."/mailman/admin/".$list."/privacy?advertised=".$status."&adminpw=".$password;
+		file_get_contents($url);
+	}
 }
 ?>
