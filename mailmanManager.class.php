@@ -310,6 +310,8 @@ class mailmanManager
 		}
 		return false;
 	}
+	
+	//Replay Goes To List
 	public function getReplyGoesToList($list, $pw, $cache = 86400)
 	{
 		$url = $this->getLink("admin/".$list);
@@ -342,8 +344,189 @@ class mailmanManager
 		}
 		return false;
 	}
+	//reply_to_address
+	public function getReplyToAddress($list, $pw, $cache = 86400)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = $this->getFileContent($url, $cache);
+		$plattern = '@name\=\"reply\_to\_address\"\stype\=\"TEXT\"\svalue\=\"(.*?)\"@';
+		preg_match($plattern, $content, $treffer);
+		return $treffer[1];
+	}
+	public function setReplyToAddress($list, $pw, $subjectPrefix)
+	{
+		$url = $this->getLink("admin/".$list);
+		$param["reply_to_address"]=$subjectPrefix;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$subject = $this->getReplyToAddress($list, $pw, 0);
+		if($subject==$subjectPrefix)
+		{
+			return true;
+		}
+		return false;
+	}
+	//umbrella_list
+	public function getUmbrellaList($list, $pw, $cache = 86400)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = $this->getFileContent($url, $cache);
+		if(strpos($content, '<INPUT name="umbrella_list" type="RADIO" value="0" CHECKED >')==FALSE)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	public function setUmbrellaList($list, $pw, $status) //true or false
+	{
+		if($status==TRUE)
+		{
+			$status = 1;
+		}
+		if($status==FALSE)
+		{
+			$status = 0;
+		}
+		$url = $this->getLink("admin/".$list);
+		$param["umbrella_list"]=$status;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$check = $this->getUmbrellaList($list, $pw, 0);
+		if($check==$status)
+		{
+			return true;
+		}
+		return false;
+	}
+	//umbrella_member_suffix
+	public function getUmbrellaMemberSuffix($list, $pw, $cache = 86400)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = $this->getFileContent($url, $cache);
+		$plattern = '@name\=\"umbrella\_member\_suffix\"\stype\=\"TEXT\"\svalue\=\"(.*?)\"@';
+		preg_match($plattern, $content, $treffer);
+		return $treffer[1];
+	}
+	public function setUmbrellaMemberSuffix($list, $pw, $UmbrellaMemberSuffix)
+	{
+		$url = $this->getLink("admin/".$list);
+		$param["umbrella_member_suffix"]=$UmbrellaMemberSuffix;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$subject = $this->getUmbrellaMemberSuffix($list, $pw, 0);
+		if($subject==$UmbrellaMemberSuffix)
+		{
+			return true;
+		}
+		return false;
+	}
+	//send_reminder
+	public function getSendReminders($list, $pw, $cache = 86400)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = $this->getFileContent($url, $cache);
+		if(strpos($content, '<INPUT name="send_reminders" type="RADIO" value="0" CHECKED >')==FALSE)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	public function setSendReminders($list, $pw, $status) //true or false
+	{
+		if($status==TRUE)
+		{
+			$status = 1;
+		}
+		if($status==FALSE)
+		{
+			$status = 0;
+		}
+		$url = $this->getLink("admin/".$list);
+		$param["send_reminders"]=$status;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$check = $this->getSendReminders($list, $pw, 0);
+		if($check==$status)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	//welcome_msg
+	public function getWelcomeMsg($list, $pw)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = file_get_contents($url);
+		$plattern = '@\<TEXTAREA\sNAME\=welcome\_msg\sROWS\=4\sCOLS\=40\sWRAP\=soft\>(.*?)\<\/TEXTAREA>@ms';
+		preg_match($plattern, $content, $treffer);
+		return $treffer[1];
+		//return $treffer[1];
+	}
+	public function setWelcomeMsg($list, $pw, $p)
+	{
+		$url = $this->getLink("admin/".$list);
+		$param["welcome_msg"]=$p;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$check = $this->getSendReminders($list, $pw, 0);
+		if($check==$p)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	//send_welcome_msg
+	public function getSendWelcomeMsg($list, $pw, $cache = 86400)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = $this->getFileContent($url, $cache);
+		if(strpos($content, '<INPUT name="send_welcome_msg" type="RADIO" value="0" CHECKED >')==FALSE)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	public function setSendWelcomeMsg($list, $pw, $status) //true or false
+	{
+		if($status==TRUE)
+		{
+			$status = 1;
+		}
+		if($status==FALSE)
+		{
+			$status = 0;
+		}
+		$url = $this->getLink("admin/".$list);
+		$param["send_welcome_msg"]=$status;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$check = $this->getSendWelcomeMsg($list, $pw, 0);
+		if($check==$status)
+		{
+			return true;
+		}
+		return false;
+	}
 	
 	//Helper Funktion
+	
 	private function getLink($funktion = "")
 	{
 		$url = $this->protokoll."://".$this->server;
