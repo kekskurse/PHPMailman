@@ -1,5 +1,5 @@
-Use
----
+Use class mailman
+-----------------
 
 How to Use this Class:
     require_once 'class/mailman.class.php';
@@ -18,5 +18,6 @@ Remove a Mail from a List:
     $mailman->remove("exampla@mail.de", "listname", "listpassword", "list.example.com/cgi-bin");
 
 
-
-
+Use class mailmanManager
+------------------------
+In Development
