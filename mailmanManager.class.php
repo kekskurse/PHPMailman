@@ -238,7 +238,111 @@ class mailmanManager
 		}
 		return false;
 	}
+	//Anonyme List
+	public function getAnonymousList($list, $pw, $cache = 86400)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = $this->getFileContent($url, $cache);
+		if(strpos($content, '<INPUT name="anonymous_list" type="RADIO" value="0" CHECKED >')==FALSE)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	public function setAnonymousList($list, $pw, $status)
+	{
+		if($status==TRUE)
+		{
+			$status = 1;
+		}
+		if($status==FALSE)
+		{
+			$status = 0;
+		}
+		$url = $this->getLink("admin/".$list);
+		$param["anonymous_list"]=$status;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$check = $this->getAnonymousList($list, $pw, 0);
+		if($check==$status)
+		{
+			return true;
+		}
+		return false;
+	}
+	//first_strip_reply_to
+	public function getFirstStripReplyTo($list, $pw, $cache = 86400)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = $this->getFileContent($url, $cache);
+		if(strpos($content, '<INPUT name="first_strip_reply_to" type="RADIO" value="0" CHECKED >')==FALSE)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	public function setFirstStripReplyTo($list, $pw, $status) //true or false
+	{
+		if($status==TRUE)
+		{
+			$status = 1;
+		}
+		if($status==FALSE)
+		{
+			$status = 0;
+		}
+		$url = $this->getLink("admin/".$list);
+		$param["first_strip_reply_to"]=$status;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$check = $this->getFirstStripReplyTo($list, $pw, 0);
+		if($check==$status)
+		{
+			return true;
+		}
+		return false;
+	}
+	public function getReplyGoesToList($list, $pw, $cache = 86400)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = $this->getFileContent($url, $cache);
+		if(strpos($content, '<INPUT name="reply_goes_to_list" type="RADIO" value="0" CHECKED >')!=FALSE)
+		{
+			return 0;
+		}
+		if(strpos($content, '<INPUT name="reply_goes_to_list" type="RADIO" value="1" CHECKED >')!=FALSE)
+		{
+			return 1;
+		}
+		if(strpos($content, '<INPUT name="reply_goes_to_list" type="RADIO" value="2" CHECKED >')!=FALSE)
+		{
+			return 2;
+		}
 
+	}
+	public function setReplyGoesToList($list, $pw, $status) //0 = Poster 1 = This list 2 = Explicit address
+	{
+		$url = $this->getLink("admin/".$list);
+		$param["reply_goes_to_list"]=$status;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$check = $this->getReplyGoesToList($list, $pw, 0);
+		if($check==$status)
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	//Helper Funktion
 	private function getLink($funktion = "")
 	{
