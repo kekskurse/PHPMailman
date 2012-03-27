@@ -587,6 +587,80 @@ class mailmanManager
 		return false;
 	}
 	
+	//admin_immed_notify
+	public function getAdminImmedNotify($list, $pw, $cache = 86400)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = $this->getFileContent($url, $cache);
+		if(strpos($content, '<INPUT name="admin_immed_notify" type="RADIO" value="0" CHECKED >')==FALSE)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	public function setAdminImmedNotify($list, $pw, $status) //true or false
+	{
+		if($status==TRUE)
+		{
+			$status = 1;
+		}
+		if($status==FALSE)
+		{
+			$status = 0;
+		}
+		$url = $this->getLink("admin/".$list);
+		$param["admin_immed_notify"]=$status;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$check = $this->getAdminImmedNotify($list, $pw, 0);
+		if($check==$status)
+		{
+			return true;
+		}
+		return false;
+	}
+	//admin_notify_mchanges
+	
+	public function getAdminNotifyMchanges($list, $pw, $cache = 86400)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = $this->getFileContent($url, $cache);
+		if(strpos($content, '<INPUT name="admin_notify_mchanges" type="RADIO" value="0" CHECKED >')==FALSE)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	public function setAdminNotifyMchanges($list, $pw, $status) //true or false
+	{
+		if($status==TRUE)
+		{
+			$status = 1;
+		}
+		if($status==FALSE)
+		{
+			$status = 0;
+		}
+		$url = $this->getLink("admin/".$list);
+		$param["admin_notify_mchanges"]=$status;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$check = $this->getAdminNotifyMchanges($list, $pw, 0);
+		if($check==$status)
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	//Helper Funktion
 	
 	private function getLink($funktion = "")
