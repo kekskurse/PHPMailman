@@ -772,7 +772,77 @@ class mailmanManager
 		return false;
 	}
 	
+	//max_message_size
+	public function getMaxMessageSize($list, $pw)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = file_get_contents($url);
+		$plattern = '@name\=\"max\_message\_size\"\stype\=\"TEXT\"\svalue\=\"(.*?)\"@';
+		preg_match($plattern, $content, $treffer);
+		return $treffer[1];
+	}
+	public function setMaxMessageSize($list, $pw, $p)
+	{
+		$url = $this->getLink("admin/".$list);
+		$param["max_message_size"]=$p;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$check = $this->getMaxMessageSize($list, $pw, 0);
+		if($check==$p)
+		{
+			return true;
+		}
+		return false;
+	}
 	
+	//admin_member_chunksize
+	public function getAdminMemberChunksize($list, $pw)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = file_get_contents($url);
+		$plattern = '@name\=\"admin\_member\_chunksize\"\stype\=\"TEXT\"\svalue\=\"(.*?)\"@';
+		preg_match($plattern, $content, $treffer);
+		return $treffer[1];
+	}
+	public function setAdminMemberChunksize($list, $pw, $p)
+	{
+		$url = $this->getLink("admin/".$list);
+		$param["admin_member_chunksize"]=$p;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$check = $this->getAdminMemberChunksize($list, $pw, 0);
+		if($check==$p)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	//host_name
+	public function getHostName($list, $pw, $cache = 86400)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = $this->getFileContent($url, $cache);
+		$plattern = '@name\=\"host\_name\"\stype\=\"TEXT\"\svalue\=\"(.*?)\"@';
+		preg_match($plattern, $content, $treffer);
+		return $treffer[1];
+	}
+	public function setHostName($list, $pw, $p)
+	{
+		$url = $this->getLink("admin/".$list);
+		$param["host_name"]=$p;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$subject = $this->getHostName($list, $pw, $p);
+		if($subject==$p)
+		{
+			return true;
+		}
+		return false;
+	}
 	
 	//Helper Funktion
 	
