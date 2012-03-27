@@ -623,8 +623,45 @@ class mailmanManager
 		}
 		return false;
 	}
-	//admin_notify_mchanges
+	//respond_to_post_requests
 	
+	public function getRespondToPostRequests($list, $pw, $cache = 86400)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = $this->getFileContent($url, $cache);
+		if(strpos($content, '<INPUT name="respond_to_post_requests" type="RADIO" value="0" CHECKED >')==FALSE)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	public function setRespondToPostRequests($list, $pw, $status) //true or false
+	{
+		if($status==TRUE)
+		{
+			$status = 1;
+		}
+		if($status==FALSE)
+		{
+			$status = 0;
+		}
+		$url = $this->getLink("admin/".$list);
+		$param["respond_to_post_requests"]=$status;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$check = $this->getRespondToPostRequests($list, $pw, 0);
+		if($check==$status)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	//admin_notify_mchanges
 	public function getAdminNotifyMchanges($list, $pw, $cache = 86400)
 	{
 		$url = $this->getLink("admin/".$list);
@@ -660,6 +697,82 @@ class mailmanManager
 		}
 		return false;
 	}
+	
+	//emergency
+	public function getEmergency($list, $pw, $cache = 86400)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = $this->getFileContent($url, $cache);
+		if(strpos($content, '<INPUT name="emergency" type="RADIO" value="0" CHECKED >')==FALSE)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	public function setEmergency($list, $pw, $status) //true or false
+	{
+		if($status==TRUE)
+		{
+			$status = 1;
+		}
+		if($status==FALSE)
+		{
+			$status = 0;
+		}
+		$url = $this->getLink("admin/".$list);
+		$param["emergency"]=$status;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$check = $this->getEmergency($list, $pw, 0);
+		if($check==$status)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	//administrivia
+	public function getAdministrivia($list, $pw, $cache = 86400)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = $this->getFileContent($url, $cache);
+		if(strpos($content, '<INPUT name="administrivia" type="RADIO" value="0" CHECKED >')==FALSE)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	public function setAdministrivia($list, $pw, $status) //true or false
+	{
+		if($status==TRUE)
+		{
+			$status = 1;
+		}
+		if($status==FALSE)
+		{
+			$status = 0;
+		}
+		$url = $this->getLink("admin/".$list);
+		$param["administrivia"]=$status;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$check = $this->getAdministrivia($list, $pw, 0);
+		if($check==$status)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	
 	
 	//Helper Funktion
 	
