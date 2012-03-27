@@ -36,7 +36,7 @@ class mailmanManager
 		$param["notify"]=$notify;
 		$param["auth"]=$authPW;
 		$param["doit"]=true;
-		$re = $this->post_request($url, $param, $url);	
+		$re = $this->post_request($url, $param);	
 		//echo $re['content'];
 	}
 	public function getName($list, $pw)
@@ -182,11 +182,11 @@ class mailmanManager
 		$re = $this->post_request($url, $param);
 	}
 	//Info
-	public function getInfo($list, $pw)
+	public function getInfo($list, $pw, $cache = 86400)
 	{
 		$url = $this->getLink("admin/".$list);
 		$url .= "?&adminpw=".$pw;
-		$content = file_get_contents($url);
+		$content = $this->getFileContent($url, $cache);
 		$plattern = '@\<TEXTAREA\sNAME\=info\sROWS\=7\sCOLS\=40\sWRAP\=soft\>(.*?)\<\/TEXTAREA>@ms';
 		preg_match($plattern, $content, $treffer);
 		return $treffer[1];
@@ -197,7 +197,12 @@ class mailmanManager
 		$param["info"]=$info;
 		$param["adminpw"]=$pw;
 		$re = $this->post_request($url, $param);
-		
+		$check = $this->getInfo($list, $pw, 0);
+		if($check==$info)
+		{
+			return true;
+		}
+		return false;
 	}
 	
 	public function advertiseList($status = 1, $list, $password, $domain = NULL, $protokoll = NULL) {
@@ -209,6 +214,29 @@ class mailmanManager
 		}
 		$url = $protokoll . "://" . $domain . "/mailman/admin/" . $list . "/privacy?advertised=" . $status . "&adminpw=" . $password;
 		file_get_contents($url);
+	}
+	//SubjectPrefix
+	public function getSubjectPrefix($list, $pw, $cache = 86400)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = $this->getFileContent($url, $cache);
+		$plattern = '@name\=\"subject\_prefix\"\stype\=\"TEXT\"\svalue\=\"(.*?)\"@';
+		preg_match($plattern, $content, $treffer);
+		return $treffer[1];
+	}
+	public function setSubjectPrefix($list, $pw, $subjectPrefix)
+	{
+		$url = $this->getLink("admin/".$list);
+		$param["subject_prefix"]=$subjectPrefix;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$subject = $this->getSubjectPrefix($list, $pw, 0);
+		if($subject==$subjectPrefix)
+		{
+			return true;
+		}
+		return false;
 	}
 
 	//Helper Funktion
@@ -226,6 +254,24 @@ class mailmanManager
 		}
 		return $url;
 		
+	}
+	private function getFileContent($url, $cache = 0)
+	{
+		$name = md5($url);
+		if(file_exists("cache/".$name))
+		{
+			$time = filectime("cache/".$name);
+			if($time > time() - $cache)
+			{
+				return file_get_contents("cache/".$name);
+			}
+		}
+		//echo "DOWNLOAD";
+		$content = file_get_contents($url);
+		$fp = fopen("cache/".$name, "w");
+		fputs($fp, $content);
+		fclose($fp);
+		return $content;
 	}
 	private function post_request($url, $data, $referer = '') {
 
@@ -281,7 +327,7 @@ class mailmanManager
 		// return as structured array:
 		return array('status' => 'ok', 'header' => $header, 'content' => $content);
 	}
+	
 
 }
 ?>
-		preg_match($plattern,>
