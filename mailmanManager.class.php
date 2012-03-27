@@ -525,6 +525,68 @@ class mailmanManager
 		return false;
 	}
 	
+	//goodbye_msg
+	public function getGoodbyeMsg($list, $pw)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = file_get_contents($url);
+		$plattern = '@\<TEXTAREA\sNAME\=goodbye\_msg\sROWS\=4\sCOLS\=40\sWRAP\=soft\>(.*?)\<\/TEXTAREA>@ms';
+		preg_match($plattern, $content, $treffer);
+		return $treffer[1];
+		//return $treffer[1];
+	}
+	public function setGoodbyeMsg($list, $pw, $p)
+	{
+		$url = $this->getLink("admin/".$list);
+		$param["goodbye_msg"]=$p;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$check = $this->getGoodbyeMsg($list, $pw, 0);
+		if($check==$p)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	//send_goodbye_msg
+	public function getSendGoodbyeMsg($list, $pw, $cache = 86400)
+	{
+		$url = $this->getLink("admin/".$list);
+		$url .= "?&adminpw=".$pw;
+		$content = $this->getFileContent($url, $cache);
+		if(strpos($content, '<INPUT name="send_goodbye_msg" type="RADIO" value="0" CHECKED >')==FALSE)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	public function setSendGoodbyeMsg($list, $pw, $status) //true or false
+	{
+		if($status==TRUE)
+		{
+			$status = 1;
+		}
+		if($status==FALSE)
+		{
+			$status = 0;
+		}
+		$url = $this->getLink("admin/".$list);
+		$param["send_goodbye_msg"]=$status;
+		$param["adminpw"]=$pw;
+		$re = $this->post_request($url, $param);
+		$check = $this->getSendGoodbyeMsg($list, $pw, 0);
+		if($check==$status)
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	//Helper Funktion
 	
 	private function getLink($funktion = "")
