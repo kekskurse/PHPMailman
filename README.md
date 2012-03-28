@@ -60,5 +60,28 @@ You can add a new Owner. This function really add not change the Ownser!
 You can dell a Ownser. This function only delete ONE E-Mail
 
 	$mm->delOwnser($list, $pw, $ownerToDel);
+	
+You can get the Moderator as an Array:
 
+	$mm->getModerator($list, $pw); //Return a String Array
+
+You can add a new Moderator. This function really add not change the Moderator!
+
+	$mm->addModerator($list, $pw, $ownerToAdd);
+
+You can dell a Moderator. This function only delete ONE E-Mail
+
+	$mm->delModerator($list, $pw, $ownerToDel);
+
+You can get and set the Discription of the List
+
+	$mm->getDescription($list, $pw); //Return the Name of the List
+	$mm->setDescription($list, $pw, $p); //Return a Boolen
+
+You can get and set the Info of the List
+
+	$mm->getInfo($list, $pw); //Return the Name of the List
+	$mm->setInfo($list, $pw, $p); //Return a Boolen
+
+and much more ;)
 
