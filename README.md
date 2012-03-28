@@ -49,4 +49,16 @@ You can get and set the 'real' Name of a Mailinglist. But your are only allowd t
 	$mm->getName($list, $pw); //Return the Name of the List
 	$mm->setName($list, $pw, $p); //Return a Boolen
 
+You can get the Owner as an Array:
+
+	$mm->getOwner($list, $pw); //Return a String Array
+
+You can add a new Owner. This function really add not change the Ownser!
+
+	$mm->addOwner($list, $pw, $ownerToAdd);
+
+You can dell a Ownser. This function only delete ONE E-Mail
+
+	$mm->delOwnser($list, $pw, $ownerToDel);
+
 
