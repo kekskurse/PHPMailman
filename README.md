@@ -1,4 +1,12 @@
-# Use class mailman
+# PHPMailmann 
+PHPMailman are PHP-Classes to Manage a Mailman Server.
+
+* mailman.class.php -> Basic function to Manage the Members of a List
+* MailmanManager.class.php -> General Config of a List and create a new List
+* MailmanManagerPW.class.php -> Set/Change the Admin and the Moderator Passwort
+
+# Parts of PHPMailman
+## Use class mailman
 
 you can use the Mailman Class to Get/Set the Member of a Mailinglist and get Informationen from the Mailman Server.
 
@@ -24,7 +32,7 @@ Remove a Mail from a List:
      $mailman->remove("exampla@mail.de", "listname", "listpassword", "list.example.com/cgi-bin");
 
 
-# Use class mailmanManager
+## Use class mailmanManager
 
 You can use the MailmanManager Class to Manage your Mailman Server. You can change the Settings of a List or Create new Lists. 
 
