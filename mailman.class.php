@@ -31,6 +31,22 @@ class mailman {
 		}
 		return false;
 	}
+	public function getMember($list, $passwort, $domain = NULL, $protokoll = NULL)
+	{
+                if ($domain == NULL) {
+                        $domain = $this -> domain;
+                }
+                if ($protokoll == NULL) {
+                        $protokoll = $this -> protokoll;
+                }
+		$url = $protokoll . "://" . $domain . "/mailman/admin/" . $list . "/members?adminpw=" . $passwort;
+		//echo $url."\r\n<br>";
+		$content = file_get_contents($url);
+		//echo $content;
+		preg_match_all('/<a.href=\"[^\"]*\">([a-z0-9\,\!\#\$\%\&\'\*\+\-\=\?\^\_\{\|\}\~\.]*\@[a-z0-9\,\!\#\$\%\&\'\*\+\-\=\?\^\_\{\|\}\~\.]*)<.a>/', $content, $treffer);
+		//var_dump($treffer[1]);
+		return $treffer[1];
+	}
 
 	public function insert($mail, $list, $password, $domain = NULL, $protokoll = NULL) {
 		if ($domain == NULL) {
